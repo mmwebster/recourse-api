@@ -41,7 +41,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # API Gems
 gem 'jsonapi-resources' # gem 'active_model_serializers'
-# gem 'devise', '~> 3.4.0'
+gem 'devise', '~> 3.4.0'
 gem 'furatto'
 
 group :development do

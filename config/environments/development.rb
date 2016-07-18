@@ -7,10 +7,10 @@ Rails.application.configure do
   config.cache_classes = false
 
   # Do not eager load code on boot.
-  config.eager_load = false
+  config.eager_load = true # changed from "false" for jsonapi-resources
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local       = false # changed from "true" for jsonapi-resources
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send.
@@ -38,4 +38,7 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Devise options
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 end
