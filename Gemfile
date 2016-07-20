@@ -3,9 +3,9 @@ source 'https://rubygems.org'
 # heroku tools
 gem 'rails_12factor'
 # ruby version
-ruby '2.1.2'
+ruby '2.2.5'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.3'
+gem 'rails', '~> 5.0.0'
 # Use postgresql as the database for Active Record
 gem 'pg'
 # Awesome repl tool for rails console
@@ -40,8 +40,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'capistrano-rails', group: :development
 
 # API Gems
-gem 'jsonapi-resources' # gem 'active_model_serializers'
-gem 'devise', '~> 3.4.0'
+gem 'jsonapi-resources', '0.7.1.beta2' # gem 'active_model_serializers'
+gem 'devise' #, '~> 3.4.0'
 gem 'furatto'
 
 group :development do
