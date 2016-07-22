@@ -16,6 +16,9 @@ Rails.application.routes.draw do
     end
   end
 
+  # match "/:api_endpoint" => "api/v1", via: [:get, :post]
+  # match "courses/" => "api/v1/courses#index", via: [:get, :post]
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
