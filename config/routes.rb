@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     end
   end
 
+  match "/*path" => "home#index"
+
   # match "/:api_endpoint" => "api/v1", via: [:get, :post]
   # match "courses/" => "api/v1/courses#index", via: [:get, :post]
 
