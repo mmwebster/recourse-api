@@ -7,9 +7,9 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 # delete all old model instances
-User.delete_all
+# User.delete_all
 Course.delete_all
 
 # instantiate new ones
-user = User.create(email: 'wilomebster@gmail.com', password: 'password')
+# user = User.create(email: 'wilomebster@gmail.com', password: 'password')
 course = Course.create(name: 'Test Course')

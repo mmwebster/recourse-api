@@ -41,4 +41,8 @@ Rails.application.configure do
 
   # Devise options
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+  # Redis options
+  config.redis_url = "redis://0.0.0.0:6379/"
+
 end

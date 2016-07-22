@@ -39,7 +39,6 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     arel (7.1.0)
-    bcrypt (3.1.11)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
     builder (3.2.2)
@@ -53,6 +52,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.10.0)
+    colorize (0.8.1)
     compass (1.0.3)
       chunky_png (~> 1.2)
       compass-core (~> 1.0.2)
@@ -69,12 +69,6 @@ GEM
       compass (~> 1.0.0)
     concurrent-ruby (1.0.2)
     debug_inspector (0.0.2)
-    devise (4.2.0)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 4.1.0, < 5.1)
-      responders
-      warden (~> 1.2.3)
     diff-lcs (1.2.5)
     erubis (2.7.0)
     execjs (2.7.0)
@@ -121,7 +115,6 @@ GEM
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
-    orm_adapter (0.5.0)
     pg (0.18.4)
     pkg-config (1.1.7)
     pry (0.10.4)
@@ -167,8 +160,7 @@ GEM
       ffi (>= 0.5.0)
     rdoc (4.2.2)
       json (~> 1.4)
-    responders (2.2.0)
-      railties (>= 4.2.0, < 5.1)
+    redis (3.3.1)
     rspec-collection_matchers (1.1.2)
       rspec-expectations (>= 2.99.0.beta1)
     rspec-core (2.99.2)
@@ -215,8 +207,6 @@ GEM
       thread_safe (~> 0.1)
     uglifier (3.0.0)
       execjs (>= 0.3.0, < 3)
-    warden (1.2.6)
-      rack (>= 1.0)
     web-console (2.3.0)
       activemodel (>= 4.0)
       binding_of_caller (>= 0.7.2)
@@ -232,7 +222,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   coffee-rails (~> 4.1.0)
-  devise
+  colorize
   factory_girl_rails
   ffaker
   figaro
@@ -244,6 +234,7 @@ DEPENDENCIES
   pry-rails
   rails (~> 5.0.0)
   rails_12factor
+  redis
   rspec-rails (~> 2.14)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
