@@ -10,13 +10,58 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160718204423) do
+ActiveRecord::Schema.define(version: 20160804032737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "courses", force: :cascade do |t|
-    t.string   "name"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.string   "subject"
+    t.string   "number"
+    t.string   "title"
+    t.decimal  "units"
+    t.boolean  "season_fall"
+    t.boolean  "season_winter"
+    t.boolean  "season_spring"
+    t.decimal  "total_units"
+  end
+
+  create_table "nodes", force: :cascade do |t|
+    t.string   "title"
+    t.string   "node_type"
+    t.integer  "children_required"
+    t.string   "node_goal_type"
+    t.string   "node_course_parent_rel"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "quarters", force: :cascade do |t|
+    t.string   "season"
+    t.decimal  "max_units"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "schools", force: :cascade do |t|
+    t.string   "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "timelines", force: :cascade do |t|
+    t.string   "starting_season"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.string   "title"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "name_first"
+    t.string   "name_last"
+    t.string   "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

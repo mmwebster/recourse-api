@@ -12,7 +12,12 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1, :defaults => { :format => :json } do
+      jsonapi_resources :schools
+      jsonapi_resources :users
+      jsonapi_resources :nodes
       jsonapi_resources :courses
+      jsonapi_resources :quarters
+      jsonapi_resources :timelines
     end
   end
 
