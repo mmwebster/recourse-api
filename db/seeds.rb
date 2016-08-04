@@ -26,6 +26,15 @@ courses << Course.create(title: 'Linear Algebra', subject: 'AMS', number: '10',
 courses << Course.create(title: 'Differential Equations', subject: 'AMS', number: '20',
                        units: 5, season_fall: false, season_winter: true,
                        season_spring: true, total_units: 5)
+# courses << Course.create(title: 'Homogeneous Hogwash', subject: 'HHS', number: '25',
+#                        units: 5, season_fall: false, season_winter: false,
+#                        season_spring: true, total_units: 6)
+# courses << Course.create(title: 'Math Malarkey', subject: 'MMA', number: '206',
+#                        units: 5, season_fall: false, season_winter: true,
+#                        season_spring: false, total_units: 10)
+# courses << Course.create(title: 'Psychological Poppycock', subject: 'PSY', number: '666',
+#                        units: 5, season_fall: true, season_winter: true,
+#                        season_spring: true, total_units: 7)
 
 # for now, avoiding STI and just going with optional fields in the Node model
 nodes = []
@@ -57,3 +66,7 @@ timeline.quarters[0].courses << courses[0]
 timeline.quarters[1].courses << courses[0]
 timeline.quarters[1].courses << courses[1]
 timeline.quarters[2].courses << courses[1]
+courses[0].concurrent_children << courses[1]
+# courses[0].nodes << nodes[0]
+# courses[0].nodes << nodes[1]
+# courses[1].nodes << nodes[2]

@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160804210807) do
+ActiveRecord::Schema.define(version: 20160804224050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "courses", force: :cascade do |t|
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
     t.string   "subject"
     t.string   "number"
     t.string   "title"
@@ -27,11 +27,11 @@ ActiveRecord::Schema.define(version: 20160804210807) do
     t.boolean  "season_spring"
     t.decimal  "total_units"
     t.integer  "node_id"
-    t.integer  "course_id"
     t.integer  "quarter_id"
     t.integer  "timeline_id"
     t.integer  "school_id"
-    t.index ["course_id"], name: "index_courses_on_course_id", using: :btree
+    t.integer  "concurrent_parent_id"
+    t.index ["concurrent_parent_id"], name: "index_courses_on_concurrent_parent_id", using: :btree
     t.index ["node_id"], name: "index_courses_on_node_id", using: :btree
     t.index ["quarter_id"], name: "index_courses_on_quarter_id", using: :btree
     t.index ["school_id"], name: "index_courses_on_school_id", using: :btree
@@ -101,7 +101,6 @@ ActiveRecord::Schema.define(version: 20160804210807) do
     t.index ["school_id"], name: "index_users_on_school_id", using: :btree
   end
 
-  add_foreign_key "courses", "courses"
   add_foreign_key "courses", "nodes"
   add_foreign_key "courses", "quarters"
   add_foreign_key "courses", "schools"
