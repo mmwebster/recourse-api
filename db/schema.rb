@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160804191714) do
+ActiveRecord::Schema.define(version: 20160804210807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,13 @@ ActiveRecord::Schema.define(version: 20160804191714) do
     t.index ["quarter_id"], name: "index_courses_on_quarter_id", using: :btree
     t.index ["school_id"], name: "index_courses_on_school_id", using: :btree
     t.index ["timeline_id"], name: "index_courses_on_timeline_id", using: :btree
+  end
+
+  create_table "courses_quarters", id: false, force: :cascade do |t|
+    t.integer "course_id",  null: false
+    t.integer "quarter_id", null: false
+    t.index ["course_id"], name: "index_courses_quarters_on_course_id", using: :btree
+    t.index ["quarter_id"], name: "index_courses_quarters_on_quarter_id", using: :btree
   end
 
   create_table "courses_timelines", id: false, force: :cascade do |t|
