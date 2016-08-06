@@ -29,8 +29,7 @@ class HomeController < ApplicationController
           puts "ERROR: unable to retrieve index.html from Redis"
         else
           # --> SUCCESS
-          puts "SUCCESS: properly loaded index from redis"
-          Rails.logger.debug("SUCCESS".green + ": properly loaded index from redis")
+          puts "SUCCESS: properly loaded index from Redis"
           render html: index.html_safe
         end
       end
