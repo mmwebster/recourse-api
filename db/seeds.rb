@@ -16,8 +16,10 @@ Timeline.destroy_all
 
 # instantiate new ones
 school = School.create(title: 'University of California, Santa Cruz')
-user = User.create(name_first: 'Wilo', name_last: 'Mebster',
-                   email: 'wilomebster@gmail.com')
+user = User.new email: "user@example.com", password: "password",
+                name_first: "Plaborius", name_last: "Plumbus"
+user.skip_confirmation!
+user.save!
 
 courses = []
 courses << Course.create(title: 'Linear Algebra', subject: 'AMS', number: '10',

@@ -42,5 +42,17 @@ module ReqourseApi
       g.javascripts = false
       g.helper = false
     end
+
+    # enable cross origin resource sharing with rack-cors gem
+    config.middleware.insert_before 0, "Rack::Cors" do
+      allow do
+        origins '*'
+        resource '*', :headers => :any, :methods => [:get, :post, :options]
+      end
+    end
+
+    # to resolve: NoMethodError (undefined method `flash=' for
+    #             #<ActionDispatch::Request:0x007f8ab5bf8fc8>):
+    config.middleware.use ActionDispatch::Flash
   end
 end

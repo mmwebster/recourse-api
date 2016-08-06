@@ -1,13 +1,13 @@
 Rails.application.routes.draw do
   # devise_for :users
   # devise_for :users, path: "auth", path_names: { sign_in: 'login', sign_out: 'logout', password: 'secret', confirmation: 'verification', unlock: 'unblock', registration: 'register', sign_up: 'cmon_let_me_in' }
+  devise_for :users, controllers: { sessions: 'sessions' }
 
   # devise_scope :user do
   #   get "sign_in", to: "devise/sessions#new"
   # end
 
   # define root (needed for Devise)
-  # root to: "home#index"
   root to: "home#index"
 
   namespace :api do
@@ -22,9 +22,6 @@ Rails.application.routes.draw do
   end
 
   match "/*path" => "home#index", via: [:get]
-
-  # match "/:api_endpoint" => "api/v1", via: [:get, :post]
-  # match "courses/" => "api/v1/courses#index", via: [:get, :post]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

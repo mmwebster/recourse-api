@@ -41,10 +41,11 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # API Gems
 gem 'jsonapi-resources', '0.7.1.beta2' # gem 'active_model_serializers'
-# gem 'devise' #, '~> 3.4.0'
+gem 'devise'
 gem 'furatto'
 gem 'redis'
 gem 'colorize'
+gem 'rack-cors', :require => 'rack/cors'
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
