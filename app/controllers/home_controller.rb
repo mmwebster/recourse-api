@@ -1,7 +1,7 @@
 require "redis"
 
 class HomeController < ApplicationController
-  # skip_before_filter :authenticate_user! #, :only => [:index, :action2]
+  skip_before_filter :authenticate_user! , :only => [:index]
   # respond_to :html
 
   before_action :before_client
