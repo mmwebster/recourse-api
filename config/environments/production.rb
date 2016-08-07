@@ -77,6 +77,20 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  # Devise options
+  # Raises helpful error messages.
+  config.assets.raise_runtime_errors = true
+  config.action_mailer.default_url_options = {:host => 'http://reqourse-api.herokuapp.com'}
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address => "smtp.gmail.com",
+    :port => 587,
+    :domain => "gmail.com",
+    :authentication => :login,
+    :user_name => "reqourse@gmail.com",
+    :password => "m91IiSAIRvvA"
+  }
+
   # Redis options
   config.redis_url = ENV["REDIS_URL"]
 
