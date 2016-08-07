@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       jsonapi_resources :courses
       jsonapi_resources :quarters
       jsonapi_resources :timelines
+      match "/users/confirmation" => "devise/confirmations#show", via: [:get]
     end
   end
 
