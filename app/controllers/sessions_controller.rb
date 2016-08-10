@@ -1,6 +1,5 @@
 class SessionsController < Devise::SessionsController
   respond_to :html, :json
-  after_filter :print_response_body
 
   def create
     super do |user|
