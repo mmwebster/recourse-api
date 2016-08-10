@@ -15,9 +15,4 @@ class SessionsController < Devise::SessionsController
       end
     end
   end
-
-  def print_response_body 
-    print "Response Body: "
-    puts response.body
-  end
 end
