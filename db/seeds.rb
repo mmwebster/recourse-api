@@ -7,10 +7,10 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 # delete all old model instances, must delete child before parent associations
-User.destroy_all
-Course.destroy_all
 DegreeMajor.destroy_all
 DegreeMinor.destroy_all
+User.destroy_all
+Course.destroy_all
 School.destroy_all
 Node.destroy_all
 Quarter.destroy_all
