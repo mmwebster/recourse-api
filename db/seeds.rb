@@ -24,9 +24,9 @@ user.skip_confirmation!
 user.save!
 
 majors = []
-majors << DegreeMajor.create(title: 'Robotics Engineering')
-majors << DegreeMajor.create(title: 'Computer Engineering')
-majors << DegreeMajor.create(title: 'Economics')
+majors << DegreeMajor.create(title: 'Robotics Engineering Major')
+majors << DegreeMajor.create(title: 'Computer Engineering Major')
+majors << DegreeMajor.create(title: 'Economics Major')
 
 minors = []
 minors << DegreeMinor.create(title: 'Computer Science Minor')

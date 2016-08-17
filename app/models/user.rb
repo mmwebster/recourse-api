@@ -6,6 +6,8 @@ class User < ApplicationRecord
   belongs_to :school
   has_many :timelines, dependent: :destroy
   before_save :ensure_authentication_token
+  has_many :degree_majors
+  has_many :degree_minors
 
   def ensure_authentication_token
     if authentication_token.blank?
