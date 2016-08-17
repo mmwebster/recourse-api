@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160806012003) do
+ActiveRecord::Schema.define(version: 20160816235355) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,22 @@ ActiveRecord::Schema.define(version: 20160806012003) do
     t.integer "timeline_id", null: false
     t.index ["course_id"], name: "index_courses_timelines_on_course_id", using: :btree
     t.index ["timeline_id"], name: "index_courses_timelines_on_timeline_id", using: :btree
+  end
+
+  create_table "degree_majors", force: :cascade do |t|
+    t.string   "title"
+    t.integer  "school_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_id"], name: "index_degree_majors_on_school_id", using: :btree
+  end
+
+  create_table "degree_minors", force: :cascade do |t|
+    t.string   "title"
+    t.integer  "school_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_id"], name: "index_degree_minors_on_school_id", using: :btree
   end
 
   create_table "nodes", force: :cascade do |t|
@@ -112,6 +128,7 @@ ActiveRecord::Schema.define(version: 20160806012003) do
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
     t.string   "authentication_token"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
     t.index ["school_id"], name: "index_users_on_school_id", using: :btree
@@ -121,6 +138,8 @@ ActiveRecord::Schema.define(version: 20160806012003) do
   add_foreign_key "courses", "quarters"
   add_foreign_key "courses", "schools"
   add_foreign_key "courses", "timelines"
+  add_foreign_key "degree_majors", "schools"
+  add_foreign_key "degree_minors", "schools"
   add_foreign_key "nodes", "courses"
   add_foreign_key "nodes", "schools"
   add_foreign_key "quarters", "timelines"

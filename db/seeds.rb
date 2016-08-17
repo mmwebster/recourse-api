@@ -9,6 +9,8 @@
 # delete all old model instances, must delete child before parent associations
 User.destroy_all
 Course.destroy_all
+DegreeMajor.destroy_all
+DegreeMinor.destroy_all
 School.destroy_all
 Node.destroy_all
 Quarter.destroy_all
@@ -20,6 +22,16 @@ user = User.new email: "user@example.com", password: "password",
                 name_first: "Plaborius", name_last: "Plumbus"
 user.skip_confirmation!
 user.save!
+
+majors = []
+majors << DegreeMajor.create(title: 'Robotics Engineering')
+majors << DegreeMajor.create(title: 'Computer Engineering')
+majors << DegreeMajor.create(title: 'Economics')
+
+minors = []
+minors << DegreeMinor.create(title: 'Computer Science Minor')
+minors << DegreeMinor.create(title: 'Computer Engineering Minor')
+minors << DegreeMinor.create(title: 'Economics Minor')
 
 courses = []
 courses << Course.create(title: 'Linear Algebra', subject: 'AMS', number: '10',
@@ -59,6 +71,8 @@ timeline.quarters << Quarter.create(season: 'spring', max_units: 19,
 # hook up the relationships
 school.courses << courses
 school.users << user
+school.degree_majors << majors
+school.degree_minors << minors
 # timeline.completed_courses << courses
 timeline.courses << courses
 # course[0].timeline = timeline
