@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160819000117) do
+ActiveRecord::Schema.define(version: 20160819225823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,13 @@ ActiveRecord::Schema.define(version: 20160819000117) do
     t.index ["user_id"], name: "index_degree_majors_on_user_id", using: :btree
   end
 
+  create_table "degree_majors_timelines", id: false, force: :cascade do |t|
+    t.integer "degree_major_id", null: false
+    t.integer "timeline_id",     null: false
+    t.index ["degree_major_id"], name: "index_degree_majors_timelines_on_degree_major_id", using: :btree
+    t.index ["timeline_id"], name: "index_degree_majors_timelines_on_timeline_id", using: :btree
+  end
+
   create_table "degree_minors", force: :cascade do |t|
     t.string   "title"
     t.integer  "school_id"
@@ -72,6 +79,13 @@ ActiveRecord::Schema.define(version: 20160819000117) do
     t.integer  "user_id"
     t.index ["school_id"], name: "index_degree_minors_on_school_id", using: :btree
     t.index ["user_id"], name: "index_degree_minors_on_user_id", using: :btree
+  end
+
+  create_table "degree_minors_timelines", id: false, force: :cascade do |t|
+    t.integer "degree_minor_id", null: false
+    t.integer "timeline_id",     null: false
+    t.index ["degree_minor_id"], name: "index_degree_minors_timelines_on_degree_minor_id", using: :btree
+    t.index ["timeline_id"], name: "index_degree_minors_timelines_on_timeline_id", using: :btree
   end
 
   create_table "nodes", force: :cascade do |t|
