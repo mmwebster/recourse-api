@@ -78,6 +78,27 @@ timeline.quarters << Quarter.create(season: 'winter', max_units: 19,
 timeline.quarters << Quarter.create(season: 'spring', max_units: 19,
                          start_date: Date.parse('28-3-2017'))
 
+timeline.quarters << Quarter.create(season: 'fall', max_units: 19,
+                         start_date: Date.parse('27-9-2017'))
+timeline.quarters << Quarter.create(season: 'winter', max_units: 19,
+                         start_date: Date.parse('5-1-2018'))
+timeline.quarters << Quarter.create(season: 'spring', max_units: 19,
+                         start_date: Date.parse('28-3-2018'))
+
+timeline.quarters << Quarter.create(season: 'fall', max_units: 19,
+                         start_date: Date.parse('27-9-2018'))
+timeline.quarters << Quarter.create(season: 'winter', max_units: 19,
+                         start_date: Date.parse('5-1-2019'))
+timeline.quarters << Quarter.create(season: 'spring', max_units: 19,
+                         start_date: Date.parse('28-3-2019'))
+
+timeline.quarters << Quarter.create(season: 'fall', max_units: 19,
+                         start_date: Date.parse('27-9-2019'))
+timeline.quarters << Quarter.create(season: 'winter', max_units: 19,
+                         start_date: Date.parse('5-1-2020'))
+timeline.quarters << Quarter.create(season: 'spring', max_units: 19,
+                         start_date: Date.parse('28-3-2020'))
+
 # hook up the relationships
 school.courses << courses
 school.users << user
