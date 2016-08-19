@@ -9,12 +9,12 @@
 # delete all old model instances, must delete child before parent associations
 DegreeMajor.destroy_all
 DegreeMinor.destroy_all
-User.destroy_all
+Timeline.destroy_all
 Course.destroy_all
+User.destroy_all
 School.destroy_all
 Node.destroy_all
 Quarter.destroy_all
-Timeline.destroy_all
 
 # instantiate new ones
 school = School.create(title: 'University of California, Santa Cruz')
@@ -27,6 +27,14 @@ majors = []
 majors << DegreeMajor.create(title: 'Robotics Engineering Major')
 majors << DegreeMajor.create(title: 'Computer Engineering Major')
 majors << DegreeMajor.create(title: 'Economics Major')
+majors << DegreeMajor.create(title: 'Electrical Engineering Major')
+majors << DegreeMajor.create(title: 'Technology and Information Management Major')
+majors << DegreeMajor.create(title: 'A Major')
+majors << DegreeMajor.create(title: 'B Major')
+majors << DegreeMajor.create(title: 'C Major')
+majors << DegreeMajor.create(title: 'D Major')
+majors << DegreeMajor.create(title: 'E Major')
+majors << DegreeMajor.create(title: 'F Major')
 
 minors = []
 minors << DegreeMinor.create(title: 'Computer Science Minor')
@@ -34,21 +42,21 @@ minors << DegreeMinor.create(title: 'Computer Engineering Minor')
 minors << DegreeMinor.create(title: 'Economics Minor')
 
 courses = []
+courses << Course.create(title: 'Introduction to Classical Mechanics',
+                         subject: 'PHYS', number: '5A',
+                         units: 5, season_fall: true, season_winter: false,
+                         season_spring: false, total_units: 5)
 courses << Course.create(title: 'Linear Algebra', subject: 'AMS', number: '10',
-                       units: 5, season_fall: true, season_winter: true,
-                       season_spring: false, total_units: 5)
-courses << Course.create(title: 'Differential Equations', subject: 'AMS', number: '20',
-                       units: 5, season_fall: false, season_winter: true,
-                       season_spring: true, total_units: 5)
-# courses << Course.create(title: 'Homogeneous Hogwash', subject: 'HHS', number: '25',
-#                        units: 5, season_fall: false, season_winter: false,
-#                        season_spring: true, total_units: 6)
-# courses << Course.create(title: 'Math Malarkey', subject: 'MMA', number: '206',
-#                        units: 5, season_fall: false, season_winter: true,
-#                        season_spring: false, total_units: 10)
-# courses << Course.create(title: 'Psychological Poppycock', subject: 'PSY', number: '666',
-#                        units: 5, season_fall: true, season_winter: true,
-#                        season_spring: true, total_units: 7)
+                         units: 5, season_fall: true, season_winter: true,
+                         season_spring: false, total_units: 5)
+courses << Course.create(title: 'Differential Equations', subject: 'AMS',
+                         number: '20',
+                         units: 5, season_fall: false, season_winter: true,
+                         season_spring: true, total_units: 5)
+courses << Course.create(title: 'Introduction to Data Structures and Algorithms',
+                         subject: 'CMPS', number: '101',
+                         units: 5, season_fall: false, season_winter: true,
+                         season_spring: true, total_units: 5)
 
 # for now, avoiding STI and just going with optional fields in the Node model
 nodes = []
@@ -60,11 +68,13 @@ nodes << Node.create(title: 'A course node', node_type: 'course',
                                 node_course_parent_rel: 'pre',
                                 course: courses[0])
 timeline = Timeline.create(starting_season: 'fall',
-                           title: 'My Sweet College Plan')
+                           title: 'My Sweet College Plan',
+                           is_current: true)
+
 timeline.quarters << Quarter.create(season: 'fall', max_units: 19,
-                         start_date: Date.parse('27-9-2016'))
+                start_date: Date.parse('27-9-2016'))
 timeline.quarters << Quarter.create(season: 'winter', max_units: 19,
-                         start_date: Date.parse('4-1-2017'))
+                start_date: Date.parse('4-1-2017'))
 timeline.quarters << Quarter.create(season: 'spring', max_units: 19,
                          start_date: Date.parse('28-3-2017'))
 
@@ -79,9 +89,9 @@ timeline.courses << courses
 school.nodes << nodes
 user.timelines << timeline
 timeline.quarters[0].courses << courses[0]
-timeline.quarters[1].courses << courses[0]
-timeline.quarters[1].courses << courses[1]
-timeline.quarters[2].courses << courses[1]
+timeline.quarters[0].courses << courses[1]
+timeline.quarters[1].courses << courses[2]
+timeline.quarters[1].courses << courses[3]
 courses[0].concurrent_children << courses[1]
 # courses[0].nodes << nodes[0]
 # courses[0].nodes << nodes[1]

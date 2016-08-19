@@ -8,6 +8,7 @@ class User < ApplicationRecord
   before_save :ensure_authentication_token
   has_many :degree_majors
   has_many :degree_minors
+  has_many :courses
 
   def ensure_authentication_token
     if authentication_token.blank?

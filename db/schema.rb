@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160817004827) do
+ActiveRecord::Schema.define(version: 20160819000117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,11 +31,13 @@ ActiveRecord::Schema.define(version: 20160817004827) do
     t.integer  "timeline_id"
     t.integer  "school_id"
     t.integer  "concurrent_parent_id"
+    t.integer  "user_id"
     t.index ["concurrent_parent_id"], name: "index_courses_on_concurrent_parent_id", using: :btree
     t.index ["node_id"], name: "index_courses_on_node_id", using: :btree
     t.index ["quarter_id"], name: "index_courses_on_quarter_id", using: :btree
     t.index ["school_id"], name: "index_courses_on_school_id", using: :btree
     t.index ["timeline_id"], name: "index_courses_on_timeline_id", using: :btree
+    t.index ["user_id"], name: "index_courses_on_user_id", using: :btree
   end
 
   create_table "courses_quarters", id: false, force: :cascade do |t|
@@ -108,6 +110,7 @@ ActiveRecord::Schema.define(version: 20160817004827) do
     t.datetime "updated_at",      null: false
     t.string   "title"
     t.integer  "user_id"
+    t.boolean  "is_current"
     t.index ["user_id"], name: "index_timelines_on_user_id", using: :btree
   end
 
@@ -142,6 +145,7 @@ ActiveRecord::Schema.define(version: 20160817004827) do
   add_foreign_key "courses", "quarters"
   add_foreign_key "courses", "schools"
   add_foreign_key "courses", "timelines"
+  add_foreign_key "courses", "users"
   add_foreign_key "degree_majors", "schools"
   add_foreign_key "degree_majors", "users"
   add_foreign_key "degree_minors", "schools"
