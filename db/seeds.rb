@@ -12,16 +12,29 @@ DegreeMinor.destroy_all
 Timeline.destroy_all
 Course.destroy_all
 User.destroy_all
+Student.destroy_all
+Admin.destroy_all
 School.destroy_all
 Node.destroy_all
 Quarter.destroy_all
 
 # instantiate new ones
 school = School.create(title: 'University of California, Santa Cruz')
-user = User.new email: "user@example.com", password: "password",
+
+user = User.new email: "user@example.com", password: "asdfasdf",
                 name_first: "Plaborius", name_last: "Plumbus"
 user.skip_confirmation!
 user.save!
+
+student = Student.new email: "student@example.com", password: "asdfasdf",
+                      name_first: "Plaborius", name_last: "Plumbus"
+student.skip_confirmation!
+student.save!
+
+admin = Admin.new email: "admin@example.com", password: "asdfasdf",
+                  name_first: "Admanius", name_last: "Admin"
+admin.skip_confirmation!
+admin.save!
 
 majors = []
 majors << DegreeMajor.create(title: 'Robotics Engineering Major')
@@ -101,14 +114,15 @@ timeline.quarters << Quarter.create(season: 'spring', max_units: 19,
 
 # hook up the relationships
 school.courses << courses
-school.users << user
+school.students << student
+school.admins << admin
 school.degree_majors << majors
 school.degree_minors << minors
 # timeline.completed_courses << courses
 timeline.courses << courses
 # course[0].timeline = timeline
 school.nodes << nodes
-user.timelines << timeline
+student.timelines << timeline
 timeline.quarters[0].courses << courses[0]
 timeline.quarters[0].courses << courses[1]
 timeline.quarters[1].courses << courses[2]

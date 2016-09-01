@@ -3,12 +3,8 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :confirmable
-  belongs_to :school
-  has_many :timelines, dependent: :destroy
   before_save :ensure_authentication_token
-  has_many :degree_majors
-  has_many :degree_minors
-  has_many :courses
+  belongs_to :school
 
   def ensure_authentication_token
     if authentication_token.blank?

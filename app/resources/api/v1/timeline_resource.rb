@@ -1,5 +1,5 @@
 class Api::V1::TimelineResource < JSONAPI::Resource
-  attributes :title, :starting_season, :is_current
+  attributes :title, :starting_season, :is_current, :sync
   has_many :quarters
   has_many :courses
   has_many :degree_majors

@@ -6,5 +6,5 @@ class Course < ApplicationRecord
   has_many :concurrent_children, class_name: "Course",
            foreign_key: "concurrent_parent_id", dependent: :destroy
   belongs_to :concurrent_parent, class_name: "Course"
-  belongs_to :user
+  belongs_to :student
 end

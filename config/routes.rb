@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   # devise_for :users
   # devise_for :users, path: "auth", path_names: { sign_in: 'login', sign_out: 'logout', password: 'secret', confirmation: 'verification', unlock: 'unblock', registration: 'register', sign_up: 'cmon_let_me_in' }
   devise_for :users, controllers: { sessions: 'sessions' } #, registration: 'registrations' }
+  devise_for :students, controllers: { sessions: 'sessions' } #, registration: 'registrations' }
+  devise_for :admins, controllers: { sessions: 'sessions' } #, registration: 'registrations' }
 
   # devise_scope :user do
   #   get "sign_in", to: "devise/sessions#new"
@@ -14,13 +16,16 @@ Rails.application.routes.draw do
     namespace :v1, :defaults => { :format => :json } do
       jsonapi_resources :schools
       jsonapi_resources :users
+      jsonapi_resources :students
+      jsonapi_resources :admins
       jsonapi_resources :nodes
       jsonapi_resources :courses
       jsonapi_resources :quarters
       jsonapi_resources :timelines
       jsonapi_resources :degree_majors
       jsonapi_resources :degree_minors
-      # match "/users/confirmation" => "devise/confirmations#show", via: [:get]
+      match "timeline/map" => "timelines#map", via: [:get, :post]
+      match "timelines/map" => "timelines#map", via: [:get, :post]
     end
   end
 

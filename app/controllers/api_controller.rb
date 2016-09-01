@@ -1,3 +1,4 @@
+# WARNING: this controller is not inherited by Api::V1::TimelineMapController
 class ApiController < ApplicationController
   include JSONAPI::ActsAsResourceController
 
