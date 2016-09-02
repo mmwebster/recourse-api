@@ -54,6 +54,8 @@ courses << Course.create(title: 'Introduction to Classical Mechanics',
                          units: 5, season_fall: true, season_winter: false,
                          season_spring: false, total_units: 5,
                          tree: {
+                           type: 'root',
+                           title: 'Some node',
                            children: [
                              {
                                title: 'Some nested node',
@@ -61,10 +63,10 @@ courses << Course.create(title: 'Introduction to Classical Mechanics',
                                children: [],
                              },
                              {
+                               type: 'course',
                                title: 'Another nested node',
                              }
-                           ],
-                           title: 'Some node',
+                           ]
                          })
 courses << Course.create(title: 'Linear Algebra', subject: 'AMS', number: '10',
                          units: 5, season_fall: true, season_winter: true,
