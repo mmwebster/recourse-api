@@ -26,7 +26,7 @@ student.skip_confirmation!
 student.save!
 
 admin = Admin.new email: "admin@example.com", password: "asdfasdf",
-                  name_first: "Admanius", name_last: "Admin"
+                  name_first: "Adminius", name_last: "Admin"
 admin.skip_confirmation!
 admin.save!
 
