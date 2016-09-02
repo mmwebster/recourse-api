@@ -58,7 +58,19 @@ courses = []
 courses << Course.create(title: 'Introduction to Classical Mechanics',
                          subject: 'PHYS', number: '5A',
                          units: 5, season_fall: true, season_winter: false,
-                         season_spring: false, total_units: 5)
+                         season_spring: false, total_units: 5,
+                         tree: {
+                           children: [
+                             {
+                               title: 'Some nested node',
+                               children: [],
+                             },
+                             {
+                               title: 'Another nested node',
+                             }
+                           ],
+                           title: 'Some node',
+                         })
 courses << Course.create(title: 'Linear Algebra', subject: 'AMS', number: '10',
                          units: 5, season_fall: true, season_winter: true,
                          season_spring: false, total_units: 5)
