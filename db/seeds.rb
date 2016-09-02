@@ -11,7 +11,6 @@ DegreeMajor.destroy_all
 DegreeMinor.destroy_all
 Timeline.destroy_all
 Course.destroy_all
-User.destroy_all
 Student.destroy_all
 Admin.destroy_all
 School.destroy_all
@@ -20,11 +19,6 @@ Quarter.destroy_all
 
 # instantiate new ones
 school = School.create(title: 'University of California, Santa Cruz')
-
-user = User.new email: "user@example.com", password: "asdfasdf",
-                name_first: "Plaborius", name_last: "Plumbus"
-user.skip_confirmation!
-user.save!
 
 student = Student.new email: "student@example.com", password: "asdfasdf",
                       name_first: "Plaborius", name_last: "Plumbus"
@@ -63,6 +57,7 @@ courses << Course.create(title: 'Introduction to Classical Mechanics',
                            children: [
                              {
                                title: 'Some nested node',
+                               type: 'pivot',
                                children: [],
                              },
                              {
