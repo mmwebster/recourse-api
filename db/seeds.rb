@@ -132,6 +132,7 @@ timeline.courses << courses
 # course[0].timeline = timeline
 school.nodes << nodes
 student.timelines << timeline
+student.courses << courses[0]
 timeline.quarters[0].courses << courses[0]
 timeline.quarters[0].courses << courses[1]
 timeline.quarters[1].courses << courses[2]

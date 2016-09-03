@@ -17,6 +17,9 @@ class Api::V1::TimelinesController < ApiController
 
   def map
     Rails.logger.debug("MAPPER: ".green + "Performing map...")
+    # binding.pry
+    # get the degree major/minor req trees from timeline
+    # get the prior coursework from user
   end
 
 end

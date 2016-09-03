@@ -4,5 +4,5 @@ class Api::V1::TimelineResource < JSONAPI::Resource
   has_many :courses
   has_many :degree_majors
   has_many :degree_minors
-  has_one :user
+  has_one :student
 end
