@@ -1,2 +1,2 @@
-class Api::V1::DegreeMinorsController < ApiController
+class Api::V1::DegreeMinorsController < Api::V1::ReqTreeController
 end

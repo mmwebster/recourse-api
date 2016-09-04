@@ -70,6 +70,7 @@ GEM
       compass (~> 1.0.0)
     concurrent-ruby (1.0.2)
     debug_inspector (0.0.2)
+    deep_clone (0.0.1)
     devise (4.2.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -237,6 +238,7 @@ DEPENDENCIES
   byebug
   coffee-rails (~> 4.1.0)
   colorize
+  deep_clone (~> 0.0.1)
   devise
   factory_girl_rails
   ffaker

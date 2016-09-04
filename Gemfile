@@ -49,6 +49,9 @@ gem 'redis'
 gem 'colorize'
 gem 'rack-cors', :require => 'rack/cors'
 
+# Worker Gems
+gem 'deep_clone', '~> 0.0.1'
+
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
