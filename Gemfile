@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # heroku tools
 gem 'rails_12factor'
 # ruby version
-ruby '2.2.5'
+ruby '2.3.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0'
 # Super fast rails server
