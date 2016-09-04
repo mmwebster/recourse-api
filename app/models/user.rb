@@ -4,6 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :confirmable
   before_save :ensure_authentication_token
+  has_many :timelines, dependent: :destroy
 
   def ensure_authentication_token
     if authentication_token.blank?
