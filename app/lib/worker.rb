@@ -82,16 +82,31 @@ module Worker
 
       def init_tree(req_tree_records)
         # add records' trees into the decision tree
-        tree = {'children' => []}
+        # type is master whenever one or more tree roots are combined
+        tree = {'type' => 'master', 'children' => [], 'numChildrenRequired' => 0}
         req_tree_records.each do |record|
           tree['children'] << record.tree
+          tree['numChildrenRequired'] += 1
         end
         tree
       end
 
       def dfs_clean_and_connect_sub_trees(node)
-        # if course node, use id to find course record's tree
+        # if root node, make it a pivot (since they're no longer at the root)
+        if ['root'].include? node['type']
+          node['type'] = 'pivot'
+        end
+
+        # if pivot node, default numRequired (if not present) to 1
+        if ['pivot'].include? node['type']
+          if !node['numChildrenRequired']
+            node['numChildrenRequired'] = 1
+          end
+        end
+
+        # if course node
         if ['course'].include? node['type']
+          # use id to find course record's tree
           course_record = @current_user.school.courses.find(node['id'])
           # append course record's tree to the children of node
           if course_record
@@ -107,6 +122,13 @@ module Worker
             end
           else
             raise 'ERROR: required course has invalid id on node (' + node['subject'].to_s + node['number'].to_s + ')'
+          end
+
+          # default numRequired (if not present) to num children
+          if !node['numChildrenRequired']
+            if node['children']
+              node['numChildrenRequired'] = node['children'].length
+            end
           end
         end
 

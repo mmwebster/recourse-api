@@ -9,6 +9,8 @@ class Api::V1::TimelinesController < ApiController
       # Create and set decision tree for jsonapi-resources to save
       decision_tree_raw = create_decision_tree.tree
       params[:data][:attributes][:tree] = decision_tree_raw.to_json
+      # Set on params that decision tree must be resolved
+      params[:data][:attributes]['tree-resolved'] = false
     end
     # Call default action
     super
