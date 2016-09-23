@@ -141,6 +141,7 @@ module Worker
         end
       end
     end
+
   end
 
   # @desc All utilities related to generating the Timeline quarters, provided
