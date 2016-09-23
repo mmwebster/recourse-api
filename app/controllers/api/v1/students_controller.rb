@@ -8,7 +8,7 @@ class Api::V1::StudentsController < Api::V1::UsersController
     if params[:data]
       if params[:data][:attributes]
         if params[:data][:attributes][:type]
-          params[:data][:attributes][:type] = nil
+          params[:data][:attributes].delete(:type)
         end
       end
     end

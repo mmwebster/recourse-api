@@ -14,6 +14,7 @@ Timeline.destroy_all
 Course.destroy_all
 Student.destroy_all
 Admin.destroy_all
+User.destroy_all # incase the user's type is accidentally overwritten..
 School.destroy_all
 Node.destroy_all
 Quarter.destroy_all
