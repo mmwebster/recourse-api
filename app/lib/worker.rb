@@ -6,9 +6,6 @@ require 'deep_clone'
 module Worker
   # @desc All utilities related to maintaining records prior to students needing them.
   module Maintain
-    # TODO: implement this function should parse a record's tree and insert cids
-    #       where there are not present.
-    # TODO: call this function from within the major/minor/course update actions.
     def self.clean_req_tree(current_user, data)
       @current_user = current_user
       @data = data
@@ -115,8 +112,12 @@ module Worker
               if !node['children']
                 node['children'] = []
               end
-              # append
-              node['children'] << course_record.tree
+              # append the children, if any, of the connected root node
+              unless course_record.tree['children'].empty?
+                node['children'] << course_record.tree['children']
+                # set the num required from the connected root node
+                node['numChildrenRequired'] = course_record.tree['numChildrenRequired']
+              end
             else
               raise 'ERROR: required course has invalid tree on record'
             end
