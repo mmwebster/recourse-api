@@ -115,6 +115,9 @@ module Worker
               # append the children, if any, of the connected root node
               unless course_record.tree['children'].empty?
                 node['children'] << course_record.tree['children']
+                if node['children'].first.is_a?(Array)
+                  node['children'].flatten!
+                end
                 # set the num required from the connected root node
                 node['numChildrenRequired'] = course_record.tree['numChildrenRequired']
               end
@@ -244,16 +247,17 @@ module Worker
     # ******************************************************************************
     class Node
       attr_accessor :children, :course, :num_required, :parent_rel,
-                    :num_descendents, :is_root
+                    :num_descendents, :is_root, :tree
 
       def initialize(children = [], course = nil, num_required = 0,
-                     parent_rel = 'pre', num_descendents = nil, is_root = false)
+                     parent_rel = 'pre', num_descendents = nil, is_root = false, tree = {})
         @children = children
         @course = course
         @num_required = num_required
         @parent_rel = parent_rel
         @num_descendents = num_descendents
         @is_root = is_root
+        @tree = tree
       end
     end
 
@@ -411,7 +415,7 @@ module Worker
     #       quarter
     # @param timeline The timeline to puts out
     # ******************************************************************************
-    def puts_timeline(timeline)
+    def self.puts_timeline(timeline)
       puts('Timeline:')
       year = 1
 
@@ -434,18 +438,16 @@ module Worker
     #       mods.
     # @param head The head of the tree, of type Node
     # ******************************************************************************
-    def puts_tree(head)
+    def self.puts_tree(head)
       puts '- - - - - - - Printing Tree - - - - - - - - -'
       current_level = [head]
       until current_level.empty?
         next_level = []
         current_level.each do |node|
           if !node.course.nil?
-            print '(' + node.object_id.to_s + '->numReq: ' + node.num_required.to_s
-            + ', cid: ' + node.course.cid + ')'
+            print '(' + node.object_id.to_s + '->numReq: ' + node.num_required.to_s + ', cid: ' + node.course.cid + ')'
           else
-            print '(' + node.object_id.to_s + '->numReq: ' + node.num_required.to_s
-            + ', cid: ..)'
+            print '(' + node.object_id.to_s + '->numReq: ' + node.num_required.to_s + ', cid: ..)'
           end
 
           node.children.each do |child|
@@ -462,7 +464,7 @@ module Worker
     # @desc Prints out a stack of nodes according to their corresponding cids
     # @param stack The stack to puts, must be of type Stack
     # ******************************************************************************
-    def puts_priority_stack(stack)
+    def self.puts_priority_stack(stack)
       puts '- - -  - Printing Priority Stack - - - - -'
       print '| is_root | '
       stack.items.each do |node|
@@ -479,7 +481,7 @@ module Worker
     # @desc Prints out a dictionary
     # @param dictionary The dictionary
     # ******************************************************************************
-    def puts_dictionary(dictionary)
+    def self.puts_dictionary(dictionary)
       keys = dictionary.keys
       puts '- - - - - Printing Dictionary - - - - -'
       print '{ '
@@ -496,7 +498,7 @@ module Worker
     # @param function The function to be called for every node visit (dequeue)
     # @param *args Any arguments that the function needs outside of the node
     # ******************************************************************************
-    def bfs(node, lam, *args)
+    def self.bfs(node, lam, *args)
       queue = Queue.new
       queue.enqueue(node)
 
@@ -518,7 +520,7 @@ module Worker
     # @param node The head of the current sub-tree. Must be of type Node
     # @param order Boolean where false:Ascending and true:Descending order
     # ******************************************************************************
-    def dfs_sort(node, is_descending)
+    def self.dfs_sort(node, is_descending)
       # default node's num_descendents to zero
       node.num_descendents = 0
       # for every child of node
@@ -545,7 +547,7 @@ module Worker
     # @param node The head of the current sub-tree. Must be of type Node
     # @param removables Dict. of items to remove in form [cid]->[course]
     # ******************************************************************************
-    def dfs_clean(node, removables)
+    def self.dfs_clean(node, removables)
       i = 0
       end_index = node.children.length
       while i < end_index
@@ -575,11 +577,11 @@ module Worker
     # @param courseNodeDict Dict. of [cid]->[index in course_nodes] used as a lookup
     #        table
     # ******************************************************************************
-    def dfs_connect_node_subtrees(node, course_nodes, course_node_lookup_dict)
+    def self.dfs_connect_node_subtrees(node, course_nodes, course_node_lookup_dict)
       # for every child in node
       node.children.each do |child|
         # lookup child in dict. and use to define children of child
-        child.children =
+        child.children = \
           course_nodes[course_node_lookup_dict[child.course.cid]].children
         # dive into children
         dfs_connect_node_subtrees(child, course_nodes, course_node_lookup_dict)
@@ -593,7 +595,7 @@ module Worker
     #       node. Root node is not added to stack.
     # @param node The head of the current sub-tree. Must be of type Node
     # ******************************************************************************
-    def create_priority_stack(node)
+    def self.create_priority_stack(node)
       # @desc BFS proxy function that pushes a node into the priority stack
       # @param n The node to be pushed
       # @param p The priority stack to receive the node
@@ -615,7 +617,7 @@ module Worker
     # @param node The node to perform eval on
     # @param timeline A reference to the currently mapped out timeline
     # ******************************************************************************
-    def course_does_eval(node, timeline)
+    def self.course_does_eval(node, timeline)
       # 1. course in completed courses?
       return false if timeline.completed?(node.course)
 
@@ -647,7 +649,7 @@ module Worker
     # @param head_origin The head of the consolidated one-path tree. This object is
     #        copied so that the source tree is not mutated.
     # ******************************************************************************
-    def map_timeline(timeline, head_origin)
+    def self.map_timeline(timeline, head_origin)
       # duplicate the head node
       head = head_origin.clone()
       # dict. of courses used to quickly check if course has already been placed

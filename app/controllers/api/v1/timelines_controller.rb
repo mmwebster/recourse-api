@@ -23,10 +23,9 @@ class Api::V1::TimelinesController < ApiController
       # clear the treeResolved flag
       params[:data][:attributes]['tree-resolved'] = false
       # fetch all of the courses for this school
-      legacy_timeline = map_timeline
-      # TODO: set timeline to have the quarters in legacy_timeline.quarters
-      # ...
-
+      # scratch that
+      # MAPPING!!!
+      map_timeline
     end
     # Call default jsonapi-resources action
     super
@@ -58,15 +57,199 @@ class Api::V1::TimelinesController < ApiController
   #       Timeline instance
   def map_timeline
     Rails.logger.debug("TIMELINE: ".green + "Performing map...")
-    # binding.pry
     # get current user and resolved decision tree
     # current_user = current_user
     resolved_decision_tree = params[:data][:attributes][:tree] # current_user.timelines.where(is_current: true).first.tree
-    # get the ids of every course that was selected within the resolved decision tree
-    unique_course_ids = recur_resolved_decision_tree(resolved_decision_tree, [])
+    # 1. get the ids of every course that was selected within the resolved decision tree
+    unique_course_ids = recur_resolved_decision_tree(resolved_decision_tree['children'].first, [])
+    # 2. select the course records for these ids
+    unique_courses = Course.where(id: unique_course_ids)
+    # 3. for each unique, determinate course
+    uniqueCourseNodes = [] # list that will contain all unique course nodes below
+    courseNodeLookupDict = {} # dict used to lookup course node in `uniqueCourse` by its cid
 
-    # ......
-    return {}
+    i = 0
+    unique_courses.each do |course|
+      legacy_node = parse_to_legacy_course_format(course)
+      # required for dfs_connect_node_subtrees (previously performed by
+      # appendAndDict function)
+      uniqueCourseNodes << legacy_node
+      courseNodeLookupDict[legacy_node.course.cid] = i
+      i += 1
+    end
+
+    # TODO: connect the immediate children
+    # connect the immediate (certain) children
+    uniqueCourseNodes.each do |legacy_course_node|
+      unless legacy_course_node.tree['children'].empty?
+        immediate_children = dfs_find_immediate_certain_children([], legacy_course_node.tree, unique_course_ids, unique_courses)
+        legacy_course_node.children = immediate_children
+      end
+    end
+
+
+
+
+
+
+
+
+
+
+
+    head = Worker::Compute::Node.new([],nil,8,nil,nil,true) # head of the final tree passed mapTimeline
+
+
+    # connect all subtrees so that can sort uniqueCourseNodes by num descendents
+    uniqueNodesHead = Worker::Compute::Node.new(uniqueCourseNodes)
+    Worker::Compute::puts_tree(uniqueNodesHead)
+
+    Worker::Compute::dfs_connect_node_subtrees(uniqueNodesHead, uniqueCourseNodes, courseNodeLookupDict)
+
+    # sort by num descendents
+    Worker::Compute::dfs_sort(uniqueNodesHead, false)
+    # puts immediate children of head in list of unique nodes ordered by #descendents in ascending order
+    #
+    puts 'New ordering'
+    print '[ '
+    uniqueNodesHead.children.each_with_index do |child, i|
+      print child.course.cid
+      if (i < uniqueNodesHead.children.length - 1)
+          print ','
+      end
+    end
+    puts ' ]'
+    puts
+
+    def recursiveAddDescendentsToHash(hash, node)
+      if (node.children)
+        node.children.each do |child|
+          hash[child.course.cid] = true
+          recursiveAddDescendentsToHash(hash, child)
+        end
+      end
+    end
+
+    # Now get the consolidated one path tree from these one path subtrees
+    # descendents is a hash of all course nodes that have parents, and should
+    # therefore not exist as immediate children of master head.
+    descendents = {} # and roots children at `head.children`
+    for node in uniqueNodesHead.children
+      # if course node is unique
+      if !descendents.key?(node.course.cid)
+        # add its children to the unique descendents (that shall not exist in master head.children)
+        recursiveAddDescendentsToHash(descendents, node)
+
+        # <old, non-recursive method:>
+        # START
+        # for child in node.children
+        #   descendents[child.course.cid] = true
+        # end
+        # END
+
+        # add the node to head's children
+        head.children.push(node)
+        # clean head's children of any nodes now present in unique descendents
+        i = 0
+        length = head.children.length # must do this method b/c removing items from the list while iterating
+        while (i < length)
+          if descendents.key?(head.children[i].course.cid)
+            head.children.delete_at(i)
+            i -= 1
+            length -= 1 # decrement counter and length after removing item
+          end
+          i += 1
+        end
+      end
+    end
+
+    puts 'Immediate children of head of consolidated one-path tree'
+    print '[ '
+    for i in 0...head.children.length
+      print head.children[i].course.cid
+      if i < head.children.length - 1
+        print ','
+      end
+    end
+    puts ' ]'
+    puts
+
+    # completedCourses = {'AMS10' => true, 'AMS20' => true, 'CMPE100' => true, 'CMPE12' => true, 'CMPE13' => true, 'CMPE16' => true, 'CMPE8' => true, 'CMPS12B' => true, 'MATH19A' => true, 'MATH19B' => true, 'MATH23A' => true, 'PHYS5A' => true, 'PHYS5C' => true}
+    completedCourses = {}
+    quarters = [
+                 Worker::Compute::Quarter.new([], 'fall', 19),
+                 Worker::Compute::Quarter.new([], 'winter', 19),
+                 Worker::Compute::Quarter.new([], 'spring', 19),
+                 Worker::Compute::Quarter.new([], 'fall', 19),
+                 Worker::Compute::Quarter.new([], 'winter', 19),
+                 Worker::Compute::Quarter.new([], 'spring', 19),
+                 Worker::Compute::Quarter.new([], 'fall', 19),
+                 Worker::Compute::Quarter.new([], 'winter', 19),
+                 Worker::Compute::Quarter.new([], 'spring', 19),
+                 Worker::Compute::Quarter.new([], 'fall', 19),
+                 Worker::Compute::Quarter.new([], 'winter', 19),
+                 Worker::Compute::Quarter.new([], 'spring', 19),
+                 Worker::Compute::Quarter.new([], 'fall', 19),
+                 Worker::Compute::Quarter.new([], 'winter', 19),
+                 Worker::Compute::Quarter.new([], 'spring', 19),
+                 Worker::Compute::Quarter.new([], 'fall', 19),
+                 Worker::Compute::Quarter.new([], 'winter', 19),
+                 Worker::Compute::Quarter.new([], 'spring', 19)
+               ]
+
+    timeline = Worker::Compute::Timeline.new(completedCourses, quarters)
+
+    # puts timeline
+    # puts 'Timeline knot:'
+    # puts_timeline(timeline)
+
+    # puts co-pt
+    # puts 'Current co-pt:'
+    # putsTree(head)
+
+    # createTimeline takes as input a consolidated one-path tree
+    Worker::Compute::map_timeline(timeline, head)
+
+    # puts 'Finished timeline!!!:'
+    Worker::Compute::puts_timeline(timeline)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ############################################################
+    # Change it to modify the inconing params to instead pass the data the
+    # jsonapi-resource
+    ############################################################
+
+
+
+    # take each quarter from the timeline and set as the current user's timeline
+    i = 0
+    current_user.timelines.where(is_current: true).first.quarters.each do |quarter| # = timeline.quarters.map do |quarter|
+      courses_to_add = []
+      timeline.quarters[i].courses.each do |course|
+        courses_to_add = Course.where(subject: course.subject, number: course.number)
+      end
+
+      courses_to_add.each do |course|
+        quarter.courses << course
+      end
+
+      i += 1
+    end
+
+    binding.pry
   end
 
   # @desc Recurrsively iterates through every node in the resolved decision
@@ -74,14 +257,56 @@ class Api::V1::TimelinesController < ApiController
   #       the way.
   def recur_resolved_decision_tree(resolved_current_node, current_ids)
     # for every child of the current node
-    # binding.pry
     resolved_current_node['children'].each do |child|
-      puts "something"
+      if child['selected']
+        # add cid if exists
+        if child['type'] == 'course'
+          current_ids.push(child['id'])
+        end
+        # recur
+        current_ids << recur_resolved_decision_tree(child, [])
+      end
     end
-    # -> if selected
-    # --->if course node
-    # ----->add course's id to current_ids
-    # --->recur with self node, and current_ids
+    current_ids.flatten
+  end
+
+  # @desc Format course into what's required by the legacy worker (temporary,
+  #       prior to a re-write of the algorithms and data structures contained in
+  #       the legacy worker)
+  def parse_to_legacy_course_format(course)
+    # create the Course
+    legacy_course = Worker::Compute::Course.new(course.subject, course.number,
+                                         course.title, course.units,
+                                         {'fall'=>course.season_fall,
+                                          'winter'=>course.season_winter,
+                                          'spring'=>course.season_spring
+                                         }
+                                        )
+    # create the Node
+    # TODO: add a fourth param for the parent_rel—can't do it quite yet because
+    #       that info comes from the child, which this would be.
+    legacy_node = Worker::Compute::Node.new([], legacy_course, 0, 'pre', nil, false, course.tree)
+    return legacy_node
+  end
+
+  def dfs_find_immediate_certain_children(current_immediate_children, current_node, unique_course_ids, unique_courses)
+    current_node['children'].each do |child|
+      if child['type'] == 'pivot'
+        # recur on a pivot
+        current_imediate_children << dfs_find_immediate_certain_children(current_immediate_children, child, unique_course_ids, unique_courses)
+      elsif unique_course_ids.include? child['id']
+        # find the course in unique_courses where it's id equals child['id']
+        new_course = nil
+        unique_courses.each do |unique_course|
+          if unique_course.id == child['id']
+            new_course = unique_course
+          end
+        end
+        # append
+        current_immediate_children << parse_to_legacy_course_format(new_course)
+      end
+    end
+    return current_immediate_children.flatten
   end
 
 end
