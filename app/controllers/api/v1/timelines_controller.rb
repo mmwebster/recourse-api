@@ -1,5 +1,4 @@
 require 'pry'
-# require 'lib/worker'
 class Api::V1::TimelinesController < ApiController
   # TODO: implement map function in the create timeline action on this
   #       controller. Actually, just make this a before action and then add
@@ -228,11 +227,13 @@ class Api::V1::TimelinesController < ApiController
 
 
     ############################################################
-    # Change it to modify the inconing params to instead pass the data the
-    # jsonapi-resource
+    # TODO: Change it to modify the inconing params to instead pass the data the
+    # jsonapi-resource, otherwise the data won't be passed to the client until
+    # the next request for the Timeline model. Actually, just reload the
+    # timeline on the client side after clearing both flags. It is easier. But
+    # in the future, there must be a way to to send back the up-to-date timeline
+    # in the response back to the client.
     ############################################################
-
-
 
     # take each quarter from the timeline and set as the current user's timeline
     i = 0
@@ -242,14 +243,10 @@ class Api::V1::TimelinesController < ApiController
         courses_to_add = Course.where(subject: course.subject, number: course.number)
       end
 
-      courses_to_add.each do |course|
-        quarter.courses << course
-      end
+      quarter.courses = courses_to_add
 
       i += 1
     end
-
-    binding.pry
   end
 
   # @desc Recurrsively iterates through every node in the resolved decision
