@@ -60,7 +60,10 @@ class Api::V1::TimelinesController < ApiController
     # current_user = current_user
     resolved_decision_tree = params[:data][:attributes][:tree] # current_user.timelines.where(is_current: true).first.tree
     # 1. get the ids of every course that was selected within the resolved decision tree
-    unique_course_ids = recur_resolved_decision_tree(resolved_decision_tree['children'].first, [])
+    unique_course_info = recur_resolved_decision_tree(resolved_decision_tree['children'].first, {ids: [], parent_rels: {}})
+    unique_course_ids = unique_course_info[:ids]
+    # contains hash of items [course_id]=>[parent_rel]
+    unique_course_parent_rels = unique_course_info[:parent_rels]
     # 2. select the course records for these ids
     unique_courses = Course.where(id: unique_course_ids)
     # 3. for each unique, determinate course
@@ -69,7 +72,8 @@ class Api::V1::TimelinesController < ApiController
 
     i = 0
     unique_courses.each do |course|
-      legacy_node = parse_to_legacy_course_format(course)
+      # default to pre-req just incase not present
+      legacy_node = parse_to_legacy_course_format(course, (unique_course_parent_rels[course.id] or 'pre'))
       # required for dfs_connect_node_subtrees (previously performed by
       # appendAndDict function)
       uniqueCourseNodes << legacy_node
@@ -77,7 +81,6 @@ class Api::V1::TimelinesController < ApiController
       i += 1
     end
 
-    # TODO: connect the immediate children
     # connect the immediate (certain) children
     uniqueCourseNodes.each do |legacy_course_node|
       unless legacy_course_node.tree['children'].empty?
@@ -138,13 +141,6 @@ class Api::V1::TimelinesController < ApiController
       if !descendents.key?(node.course.cid)
         # add its children to the unique descendents (that shall not exist in master head.children)
         recursiveAddDescendentsToHash(descendents, node)
-
-        # <old, non-recursive method:>
-        # START
-        # for child in node.children
-        #   descendents[child.course.cid] = true
-        # end
-        # END
 
         # add the node to head's children
         head.children.push(node)
@@ -227,7 +223,7 @@ class Api::V1::TimelinesController < ApiController
 
 
     ############################################################
-    # TODO: Change it to modify the inconing params to instead pass the data the
+    # TODO: Change it to modify the incoming params to instead pass the data the
     # jsonapi-resource, otherwise the data won't be passed to the client until
     # the next request for the Timeline model. Actually, just reload the
     # timeline on the client side after clearing both flags. It is easier. But
@@ -252,25 +248,29 @@ class Api::V1::TimelinesController < ApiController
   # @desc Recurrsively iterates through every node in the resolved decision
   #       tree, and branches only on selected nodes, and add every course along
   #       the way.
-  def recur_resolved_decision_tree(resolved_current_node, current_ids)
+  # @update current_ids are now hashes with an id and a parent_rel that's
+  #         required by the parse_to_legacy_course_format function
+  def recur_resolved_decision_tree(resolved_current_node, current_info)
     # for every child of the current node
     resolved_current_node['children'].each do |child|
       if child['selected']
         # add cid if exists
         if child['type'] == 'course'
-          current_ids.push(child['id'])
+          current_info[:ids].push(child['id'])
+          current_info[:parent_rels][child['id'].to_i] = child['parentRel']
         end
         # recur
-        current_ids << recur_resolved_decision_tree(child, [])
+        current_info = recur_resolved_decision_tree(child, current_info)
       end
     end
-    current_ids.flatten
+    current_info[:ids].flatten!
+    current_info
   end
 
   # @desc Format course into what's required by the legacy worker (temporary,
   #       prior to a re-write of the algorithms and data structures contained in
   #       the legacy worker)
-  def parse_to_legacy_course_format(course)
+  def parse_to_legacy_course_format(course, parent_rel)
     # create the Course
     legacy_course = Worker::Compute::Course.new(course.subject, course.number,
                                          course.title, course.units,
@@ -281,8 +281,8 @@ class Api::V1::TimelinesController < ApiController
                                         )
     # create the Node
     # TODO: add a fourth param for the parent_rel—can't do it quite yet because
-    #       that info comes from the child, which this would be.
-    legacy_node = Worker::Compute::Node.new([], legacy_course, 0, 'pre', nil, false, course.tree)
+    #       that info doesn't comes from the child, which legacy_course is.
+    legacy_node = Worker::Compute::Node.new([], legacy_course, 0, parent_rel, nil, false, course.tree)
     return legacy_node
   end
 
@@ -290,17 +290,18 @@ class Api::V1::TimelinesController < ApiController
     current_node['children'].each do |child|
       if child['type'] == 'pivot'
         # recur on a pivot
-        current_imediate_children << dfs_find_immediate_certain_children(current_immediate_children, child, unique_course_ids, unique_courses)
+        current_immediate_children << dfs_find_immediate_certain_children(current_immediate_children, child, unique_course_ids, unique_courses)
       elsif unique_course_ids.include? child['id']
         # find the course in unique_courses where it's id equals child['id']
         new_course = nil
+        new_course_parent_rel = child['parentRel']
         unique_courses.each do |unique_course|
           if unique_course.id == child['id']
             new_course = unique_course
           end
         end
         # append
-        current_immediate_children << parse_to_legacy_course_format(new_course)
+        current_immediate_children << parse_to_legacy_course_format(new_course, new_course_parent_rel)
       end
     end
     return current_immediate_children.flatten
