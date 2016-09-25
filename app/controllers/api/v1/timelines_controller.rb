@@ -236,10 +236,11 @@ class Api::V1::TimelinesController < ApiController
     current_user.timelines.where(is_current: true).first.quarters.each do |quarter| # = timeline.quarters.map do |quarter|
       courses_to_add = []
       timeline.quarters[i].courses.each do |course|
-        courses_to_add = Course.where(subject: course.subject, number: course.number)
+        courses_to_add.append(Course.where(subject: course.subject, number: course.number))
       end
 
-      quarter.courses = courses_to_add
+      quarter.courses.delete_all
+      quarter.courses << courses_to_add
 
       i += 1
     end
