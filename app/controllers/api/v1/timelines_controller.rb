@@ -112,16 +112,16 @@ class Api::V1::TimelinesController < ApiController
     Worker::Compute::dfs_sort(uniqueNodesHead, false)
     # puts immediate children of head in list of unique nodes ordered by #descendents in ascending order
     #
-    puts 'New ordering'
-    print '[ '
-    uniqueNodesHead.children.each_with_index do |child, i|
-      print child.course.cid
-      if (i < uniqueNodesHead.children.length - 1)
-          print ','
-      end
-    end
-    puts ' ]'
-    puts
+    # puts 'New ordering'
+    # print '[ '
+    # uniqueNodesHead.children.each_with_index do |child, i|
+    #   print child.course.cid
+    #   if (i < uniqueNodesHead.children.length - 1)
+    #       print ','
+    #   end
+    # end
+    # puts ' ]'
+    # puts
 
     def recursiveAddDescendentsToHash(hash, node)
       if (node.children)
@@ -158,19 +158,18 @@ class Api::V1::TimelinesController < ApiController
       end
     end
 
-    puts 'Immediate children of head of consolidated one-path tree'
-    print '[ '
-    for i in 0...head.children.length
-      print head.children[i].course.cid
-      if i < head.children.length - 1
-        print ','
-      end
-    end
-    puts ' ]'
-    puts
+    # puts 'Immediate children of head of consolidated one-path tree'
+    # print '[ '
+    # for i in 0...head.children.length
+    #   print head.children[i].course.cid
+    #   if i < head.children.length - 1
+    #     print ','
+    #   end
+    # end
+    # puts ' ]'
+    # puts
 
-    # completedCourses = {'AMS10' => true, 'AMS20' => true, 'CMPE100' => true, 'CMPE12' => true, 'CMPE13' => true, 'CMPE16' => true, 'CMPE8' => true, 'CMPS12B' => true, 'MATH19A' => true, 'MATH19B' => true, 'MATH23A' => true, 'PHYS5A' => true, 'PHYS5C' => true}
-    completedCourses = {}
+    completedCourses = fetch_user_completed_courses_hash()
     quarters = [
                  Worker::Compute::Quarter.new([], 'fall', 19),
                  Worker::Compute::Quarter.new([], 'winter', 19),
@@ -306,6 +305,16 @@ class Api::V1::TimelinesController < ApiController
       end
     end
     return current_immediate_children.flatten
+  end
+
+  def fetch_user_completed_courses_hash
+    # completedCourses = {'AMS10' => true, 'AMS20' => true, 'CMPE100' => true, 'CMPE12' => true, 'CMPE13' => true, 'CMPE16' => true, 'CMPE8' => true, 'CMPS12B' => true, 'MATH19A' => true, 'MATH19B' => true, 'MATH23A' => true, 'PHYS5A' => true, 'PHYS5C' => true}
+    completed_course_records = current_user.courses
+    completed_courses_hash = {}
+    completed_course_records.each do |course|
+      completed_courses_hash[course.subject.to_s + course.number.to_s] = true
+    end
+    return completed_courses_hash
   end
 
 end

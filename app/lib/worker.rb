@@ -9,7 +9,6 @@ module Worker
     def self.clean_req_tree(current_user, data)
       @current_user = current_user
       @data = data
-      # binding.pry
       if current_user.type == 'Admin'
         if @data
           if @data[:attributes][:tree]
@@ -62,7 +61,7 @@ module Worker
 
       def initialize(current_user, req_tree_records, completed_course_records)
         @current_user = current_user
-        @completed_course_ids = hash_record_ids(completed_course_records)
+        @completed_course_ids_hash = hash_record_ids(completed_course_records)
         # each record's tree is assumed to already contain course id information
         @tree = init_tree(req_tree_records)
         dfs_clean_and_connect_sub_trees(@tree)
@@ -102,7 +101,7 @@ module Worker
         end
 
         # if course node
-        if ['course'].include? node['type']
+        if ['course'].include? node['type'] and !@completed_course_ids_hash[node['id'].to_i]
           # use id to find course record's tree
           course_record = @current_user.school.courses.find(node['id'])
           # append course record's tree to the children of node
@@ -139,7 +138,13 @@ module Worker
         # recur on children if present
         if node['children']
           node['children'].each do |child|
-            dfs_clean_and_connect_sub_trees(child)
+            # only recur if the course hasn't been completed
+            if !@completed_course_ids_hash[child['id'].to_i]
+              dfs_clean_and_connect_sub_trees(child)
+            else
+              # remove course from children if it was completed
+              node['children'].delete(child)
+            end
           end
         end
       end
