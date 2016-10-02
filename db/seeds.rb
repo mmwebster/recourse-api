@@ -85,7 +85,7 @@ courses << Course.create(title: 'Data Structures', subject: 'CMPS', number: '12B
 courses << Course.create(title: 'Abstract Data Types & Algorithms', subject: 'CMPS', number: '101', units: 5, season_fall: false, season_winter: true, season_spring: true, total_units: 5)
 
 # PHYS
-courses << Course.create(title: 'Classical Mechanics', subject: 'PHYS', number: '5A', units: 5, season_fall: true, season_winter: false, season_spring: false, total_units: 5)
+courses << Course.create(title: 'Classical Mechanics', subject: 'PHYS', number: '5A/L', units: 7, season_fall: true, season_winter: false, season_spring: false, total_units: 5)
 courses << Course.create(title: 'Electricity & Magnetism', subject: 'PHYS', number: '5C/N', units: 7, season_fall: false, season_winter: false, season_spring: true)
 
 # NOTE: robo courses not including the "Advanced Robotics Elective" courses
