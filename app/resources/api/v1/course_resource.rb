@@ -8,4 +8,6 @@ class Api::V1::CourseResource < JSONAPI::Resource
   has_many :students
   has_one :concurrent_parent
   has_one :school
+
+  paginator :paged
 end
