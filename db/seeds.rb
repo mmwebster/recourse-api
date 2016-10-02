@@ -51,36 +51,47 @@ minors << DegreeMinor.create(title: 'Computer Engineering Minor')
 minors << DegreeMinor.create(title: 'Economics Minor')
 
 courses = []
-courses << Course.create(title: 'Introduction to Classical Mechanics',
-                         subject: 'PHYS', number: '5A',
-                         units: 5, season_fall: true, season_winter: false,
-                         season_spring: false, total_units: 5,
-                         tree: {
-                           type: 'root',
-                           title: 'Some node',
-                           children: [
-                             {
-                               title: 'Some nested node',
-                               type: 'pivot',
-                               children: [],
-                             },
-                             {
-                               type: 'course',
-                               title: 'Another nested node',
-                             }
-                           ]
-                         })
-courses << Course.create(title: 'Linear Algebra', subject: 'AMS', number: '10',
-                         units: 5, season_fall: true, season_winter: true,
-                         season_spring: false, total_units: 5)
-courses << Course.create(title: 'Differential Equations', subject: 'AMS',
-                         number: '20',
-                         units: 5, season_fall: false, season_winter: true,
-                         season_spring: true, total_units: 5)
-courses << Course.create(title: 'Introduction to Data Structures and Algorithms',
-                         subject: 'CMPS', number: '101',
-                         units: 5, season_fall: false, season_winter: true,
-                         season_spring: true, total_units: 5)
+
+# MATH
+courses << Course.create(title: 'Linear Algebra', subject: 'AMS', number: '10', units: 5, season_fall: true, season_winter: true, season_spring: false, total_units: 5)
+courses << Course.create(title: 'Differential Equations', subject: 'AMS', number: '20', units: 5, season_fall: false, season_winter: true, season_spring: true, total_units: 5)
+courses << Course.create(title: 'Calculus I', subject: 'MATH', number: '19A', units: 5, season_fall: true, season_winter: true, season_spring: true)
+courses << Course.create(title: 'Calculus II', subject: 'MATH', number: '19B', units: 5, season_fall: true, season_winter: true, season_spring: true)
+courses << Course.create(title: 'Vector Calculus', subject: 'MATH', number: '23A', units: 5, season_fall: true, season_winter: true, season_spring: true)
+
+# EE
+courses << Course.create(title: 'Signals & Systems', subject: 'EE', number: '103/L', units: 7, season_fall: true, season_winter: false, season_spring: true)
+courses << Course.create(title: 'Electronic Circuits', subject: 'EE', number: '101/L', units: 7, season_fall: true, season_winter: true, season_spring: false)
+
+# CMPE
+courses << Course.create(title: 'Discrete Math', subject: 'CMPE', number: '16', units: 5, season_fall: true, season_winter: true, season_spring: true)
+courses << Course.create(title: 'Probability & Statistics', subject: 'CMPE', number: '107', units: 5, season_fall: false, season_winter: true, season_spring: true)
+courses << Course.create(title: 'Computer Systems & Assembly Language', subject: 'CMPE', number: '12/L', units: 7, season_fall: true, season_winter: true, season_spring: true)
+courses << Course.create(title: 'Computer Systems & C Programming', subject: 'CMPE', number: '13/L', units: 7, season_fall: false, season_winter: true, season_spring: true)
+courses << Course.create(title: 'Statics, Dynamics, & Biomechanics', subject: 'CMPE', number: '9', units: 5, season_fall: false, season_winter: true, season_spring: false)
+courses << Course.create(title: 'Solid Mechanics', subject: 'CMPE', number: '115', units: 5, season_fall: false, season_winter: false, season_spring: true)
+courses << Course.create(title: 'Logic Design', subject: 'CMPE', number: '100/L', units: 7, season_fall: false, season_winter: true, season_spring: true)
+courses << Course.create(title: 'Microprocessor System Design', subject: 'CMPE', number: '121/L', units: 7, season_fall: true, season_winter: false, season_spring: true)
+courses << Course.create(title: 'Intro to Mechatronics', subject: 'CMPE', number: '118/L', units: 7, season_fall: true, season_winter: false, season_spring: false)
+courses << Course.create(title: 'Feedback Control Systems', subject: 'CMPE', number: '141', units: 5, season_fall: true, season_winter: false, season_spring: false)
+courses << Course.create(title: 'Sensing & Sensor Technologies', subject: 'CMPE', number: '167/L', units: 7, season_fall: false, season_winter: true, season_spring: false)
+courses << Course.create(title: 'Technical Writing', subject: 'CMPE', number: '185', units: 5, season_fall: true, season_winter: true, season_spring: true)
+courses << Course.create(title: 'Capstone Project I', subject: 'CMPE', number: '129A', units: 2, season_fall: true, season_winter: false, season_spring: false)
+courses << Course.create(title: 'Capstone Project II', subject: 'CMPE', number: '129B', units: 5, season_fall: false, season_winter: true, season_spring: false)
+courses << Course.create(title: 'Capstone Project III', subject: 'CMPE', number: '129C', units: 5, season_fall: false, season_winter: false, season_spring: true)
+
+# CS
+courses << Course.create(title: 'Data Structures', subject: 'CMPS', number: '12B/M', units: 7, season_fall: true, season_winter: true, season_spring: true)
+courses << Course.create(title: 'Abstract Data Types & Algorithms', subject: 'CMPS', number: '101', units: 5, season_fall: false, season_winter: true, season_spring: true, total_units: 5)
+
+# PHYS
+courses << Course.create(title: 'Classical Mechanics', subject: 'PHYS', number: '5A', units: 5, season_fall: true, season_winter: false, season_spring: false, total_units: 5)
+courses << Course.create(title: 'Electricity & Magnetism', subject: 'PHYS', number: '5C/N', units: 7, season_fall: false, season_winter: false, season_spring: true)
+
+# NOTE: robo courses not including the "Advanced Robotics Elective" courses
+
+
+
 
 # for now, avoiding STI and just going with optional fields in the Node model
 nodes = []

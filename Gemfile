@@ -48,6 +48,7 @@ gem 'furatto'
 gem 'redis'
 gem 'colorize'
 gem 'rack-cors', :require => 'rack/cors'
+gem 'seed_dump'
 
 # Worker Gems
 gem 'deep_clone', '~> 0.0.1'
