@@ -170,23 +170,38 @@ class Api::V1::TimelinesController < ApiController
     # puts
 
     completedCourses = fetch_user_completed_courses_hash()
+    quarter_records = current_user.timelines.where(is_current: true).first.quarters
+
     quarters = [
-                 Worker::Compute::Quarter.new([], 'fall', 19),
+                 Worker::Compute::Quarter.new([], 'fall',   19),
                  Worker::Compute::Quarter.new([], 'winter', 19),
                  Worker::Compute::Quarter.new([], 'spring', 19),
-                 Worker::Compute::Quarter.new([], 'fall', 19),
+                 Worker::Compute::Quarter.new([], 'fall',   19),
                  Worker::Compute::Quarter.new([], 'winter', 19),
                  Worker::Compute::Quarter.new([], 'spring', 19),
-                 Worker::Compute::Quarter.new([], 'fall', 19),
+                 Worker::Compute::Quarter.new([], 'fall',   19),
                  Worker::Compute::Quarter.new([], 'winter', 19),
                  Worker::Compute::Quarter.new([], 'spring', 19),
-                 Worker::Compute::Quarter.new([], 'fall', 19),
+                 Worker::Compute::Quarter.new([], 'fall',   19),
                  Worker::Compute::Quarter.new([], 'winter', 19),
                  Worker::Compute::Quarter.new([], 'spring', 19),
-                 Worker::Compute::Quarter.new([], 'fall', 19),
+                 # Worker::Compute::Quarter.new([], 'fall',   quarter_records[0].max_units.to_i),
+                 # Worker::Compute::Quarter.new([], 'winter', quarter_records[1].max_units.to_i),
+                 # Worker::Compute::Quarter.new([], 'spring', quarter_records[2].max_units.to_i),
+                 # Worker::Compute::Quarter.new([], 'fall',   quarter_records[3].max_units.to_i),
+                 # Worker::Compute::Quarter.new([], 'winter', quarter_records[4].max_units.to_i),
+                 # Worker::Compute::Quarter.new([], 'spring', quarter_records[5].max_units.to_i),
+                 # Worker::Compute::Quarter.new([], 'fall',   quarter_records[6].max_units.to_i),
+                 # Worker::Compute::Quarter.new([], 'winter', quarter_records[7].max_units.to_i),
+                 # Worker::Compute::Quarter.new([], 'spring', quarter_records[8].max_units.to_i),
+                 # Worker::Compute::Quarter.new([], 'fall',   quarter_records[9].max_units.to_i),
+                 # Worker::Compute::Quarter.new([], 'winter', quarter_records[10].max_units.to_i),
+                 # Worker::Compute::Quarter.new([], 'spring', quarter_records[11].max_units.to_i),
+                 # TODO: Check if okay to ommit (no fallback for when not able to plan in 4 years
+                 Worker::Compute::Quarter.new([], 'fall',   19),
                  Worker::Compute::Quarter.new([], 'winter', 19),
                  Worker::Compute::Quarter.new([], 'spring', 19),
-                 Worker::Compute::Quarter.new([], 'fall', 19),
+                 Worker::Compute::Quarter.new([], 'fall',   19),
                  Worker::Compute::Quarter.new([], 'winter', 19),
                  Worker::Compute::Quarter.new([], 'spring', 19)
                ]
@@ -205,7 +220,7 @@ class Api::V1::TimelinesController < ApiController
     Worker::Compute::map_timeline(timeline, head)
 
     # puts 'Finished timeline!!!:'
-    Worker::Compute::puts_timeline(timeline)
+    # Worker::Compute::puts_timeline(timeline)
 
 
 

@@ -5,10 +5,10 @@ class ApplicationController < ActionController::Base #JSONAPI::ResourceControlle
   protect_from_forgery with: :null_session
   # protect_from_forgery prepend: true
 
-  before_filter :authenticate_user_from_token!
+  before_action :authenticate_user_from_token!
   # Enter the normal Devise authentication path,
   # using the token authenticated user if available
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   private
 

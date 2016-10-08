@@ -2,7 +2,7 @@
 class ApiController < ApplicationController
   include JSONAPI::ActsAsResourceController
 
-  after_filter do
+  after_action do
     Rails.logger.debug("RESPONSE: ".green + response.body)
   end
 
