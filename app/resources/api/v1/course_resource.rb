@@ -10,4 +10,14 @@ class Api::V1::CourseResource < JSONAPI::Resource
   has_one :school
 
   paginator :paged
+
+  # def meta(options)
+  #   {
+  #     total_pages: 10
+  #     # copyright: 'API Copyright 2015 - XYZ Corp.',
+  #     # computed_copyright: options[:serialization_options][:copyright],
+  #     # last_updated_at: _model.updated_at
+  #   }
+  # end
+
 end

@@ -19,7 +19,8 @@ class Api::V1::CoursesController < Api::V1::ReqTreeController
                total_pages: 10
              }
            }
-    new_json_response['meta'] = meta
+    # new_json_response['meta'] = meta
+    new_json_response['meta'] = {'total_pages' => 10}
     new_json_response_string = new_json_response.to_json
     response.body = new_json_response_string
   end

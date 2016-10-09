@@ -44,7 +44,7 @@ module ReqourseApi
     end
 
     # enable cross origin resource sharing with rack-cors gem
-    config.middleware.insert_before 0, "Rack::Cors" do
+    config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins '*'
         resource '*', :headers => :any, :methods => [:get, :post, :options]
