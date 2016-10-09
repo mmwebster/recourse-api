@@ -247,7 +247,7 @@ class Api::V1::TimelinesController < ApiController
 
     # take each quarter from the timeline and set as the current user's timeline
     i = 0
-    current_user.timelines.where(is_current: true).first.quarters.each do |quarter| # = timeline.quarters.map do |quarter|
+    quarter_records.each do |quarter| # = timeline.quarters.map do |quarter|
       courses_to_add = []
       timeline.quarters[i].courses.each do |course|
         courses_to_add.append(Course.where(subject: course.subject, number: course.number))
