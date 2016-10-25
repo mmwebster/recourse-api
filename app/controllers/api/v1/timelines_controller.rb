@@ -60,7 +60,11 @@ class Api::V1::TimelinesController < ApiController
     # current_user = current_user
     resolved_decision_tree = params[:data][:attributes][:tree] # current_user.timelines.where(is_current: true).first.tree
     # 1. get the ids of every course that was selected within the resolved decision tree
-    unique_course_info = recur_resolved_decision_tree(resolved_decision_tree['children'].first, {ids: [], parent_rels: {}})
+    # -> SUBSTEP TO SUPPORT MULTIPLE REQ-TREES: iterating through each of the top level children..
+    unique_course_info = {ids: [], parent_rels: {}}
+    resolved_decision_tree['children'].each do |topLevelReqTree|
+      unique_course_info = recur_resolved_decision_tree(topLevelReqTree, unique_course_info)
+    end
     unique_course_ids = unique_course_info[:ids]
     # contains hash of items [course_id]=>[parent_rel]
     unique_course_parent_rels = unique_course_info[:parent_rels]
