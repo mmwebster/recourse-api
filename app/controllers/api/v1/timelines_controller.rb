@@ -3,6 +3,9 @@ class Api::V1::TimelinesController < ApiController
   # TODO: implement map function in the create timeline action on this
   #       controller. Actually, just make this a before action and then add
   #       guards to ensure it's a requests with timeline data.
+  # NOTE: static courses are those manually placed into single quarters by users,
+  #       and that don't have periodic offering seasons and cannot therefore be
+  #       planned/mapped for in advance
   def update
     if params[:data][:attributes][:sync] and !params[:data][:attributes]['tree-resolved']
 
@@ -174,33 +177,45 @@ class Api::V1::TimelinesController < ApiController
     # puts
 
     completedCourses = fetch_user_completed_courses_hash()
+    # ensures that quarters are in the correct order, VERY NECESSARY
     quarter_records = current_user.timelines.where(is_current: true).first.quarters.order(:start_date)
 
+    # TODO: Make static courses relationship on Course
+    # save preexisting static courses before deletion (they should ideally
+    # exist within their own relationship)
+    static_preexisting_courses = []
+    quarter_records.each_with_index do |quarter, i|
+      static_preexisting_courses[i] = {courses: [], units: 0}
+      quarter.courses.each do |course|
+        if course.is_static
+          static_preexisting_courses[i][:courses] << course
+          static_preexisting_courses[i][:units] += course.units
+        end
+      end
+    end
+
+    # set hardcoded-ish max units with static course units subtracted from it
+    max_units_computed = []
+    12.times do |i|
+      max_units_computed[i] = quarter_records[i].max_units.to_i
+      unless static_preexisting_courses[i].nil?
+        max_units_computed[i] -= static_preexisting_courses[i][:units]
+      end
+    end
+
     quarters = [
-                 # Worker::Compute::Quarter.new([], 'fall',   19),
-                 # Worker::Compute::Quarter.new([], 'winter', 19),
-                 # Worker::Compute::Quarter.new([], 'spring', 19),
-                 # Worker::Compute::Quarter.new([], 'fall',   19),
-                 # Worker::Compute::Quarter.new([], 'winter', 19),
-                 # Worker::Compute::Quarter.new([], 'spring', 19),
-                 # Worker::Compute::Quarter.new([], 'fall',   19),
-                 # Worker::Compute::Quarter.new([], 'winter', 19),
-                 # Worker::Compute::Quarter.new([], 'spring', 19),
-                 # Worker::Compute::Quarter.new([], 'fall',   19),
-                 # Worker::Compute::Quarter.new([], 'winter', 19),
-                 # Worker::Compute::Quarter.new([], 'spring', 19),
-                 Worker::Compute::Quarter.new([], 'fall',   quarter_records[0].max_units.to_i),
-                 Worker::Compute::Quarter.new([], 'winter', quarter_records[1].max_units.to_i),
-                 Worker::Compute::Quarter.new([], 'spring', quarter_records[2].max_units.to_i),
-                 Worker::Compute::Quarter.new([], 'fall',   quarter_records[3].max_units.to_i),
-                 Worker::Compute::Quarter.new([], 'winter', quarter_records[4].max_units.to_i),
-                 Worker::Compute::Quarter.new([], 'spring', quarter_records[5].max_units.to_i),
-                 Worker::Compute::Quarter.new([], 'fall',   quarter_records[6].max_units.to_i),
-                 Worker::Compute::Quarter.new([], 'winter', quarter_records[7].max_units.to_i),
-                 Worker::Compute::Quarter.new([], 'spring', quarter_records[8].max_units.to_i),
-                 Worker::Compute::Quarter.new([], 'fall',   quarter_records[9].max_units.to_i),
-                 Worker::Compute::Quarter.new([], 'winter', quarter_records[10].max_units.to_i),
-                 Worker::Compute::Quarter.new([], 'spring', quarter_records[11].max_units.to_i),
+                 Worker::Compute::Quarter.new([], 'fall',   max_units_computed[0].to_i),
+                 Worker::Compute::Quarter.new([], 'winter', max_units_computed[1].to_i),
+                 Worker::Compute::Quarter.new([], 'spring', max_units_computed[2].to_i),
+                 Worker::Compute::Quarter.new([], 'fall',   max_units_computed[3].to_i),
+                 Worker::Compute::Quarter.new([], 'winter', max_units_computed[4].to_i),
+                 Worker::Compute::Quarter.new([], 'spring', max_units_computed[5].to_i),
+                 Worker::Compute::Quarter.new([], 'fall',   max_units_computed[6].to_i),
+                 Worker::Compute::Quarter.new([], 'winter', max_units_computed[7].to_i),
+                 Worker::Compute::Quarter.new([], 'spring', max_units_computed[8].to_i),
+                 Worker::Compute::Quarter.new([], 'fall',   max_units_computed[9].to_i),
+                 Worker::Compute::Quarter.new([], 'winter', max_units_computed[10].to_i),
+                 Worker::Compute::Quarter.new([], 'spring', max_units_computed[11].to_i),
                  # TODO: Check if okay to ommit (no fallback for when not able to plan in 4 years
                  Worker::Compute::Quarter.new([], 'fall',   19),
                  Worker::Compute::Quarter.new([], 'winter', 19),
@@ -250,17 +265,17 @@ class Api::V1::TimelinesController < ApiController
     ############################################################
 
     # take each quarter from the timeline and set as the current user's timeline
-    i = 0
-    quarter_records.each do |quarter| # = timeline.quarters.map do |quarter|
+    quarter_records.each_with_index do |quarter, i| # = timeline.quarters.map do |quarter|
       courses_to_add = []
       timeline.quarters[i].courses.each do |course|
         courses_to_add.append(Course.where(subject: course.subject, number: course.number))
       end
 
+      # reset courses in quarter (except for static ones)
       quarter.courses.delete_all
+      # re-add he static courses
+      quarter.courses << static_preexisting_courses[i][:courses]
       quarter.courses << courses_to_add
-
-      i += 1
     end
   end
 

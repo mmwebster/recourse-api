@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160904171845) do
+ActiveRecord::Schema.define(version: 20161026020848) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20160904171845) do
     t.integer  "concurrent_parent_id"
     t.integer  "user_id"
     t.json     "tree",                 default: {"type"=>"root", "children"=>[]}, null: false
+    t.boolean  "is_static"
     t.index ["concurrent_parent_id"], name: "index_courses_on_concurrent_parent_id", using: :btree
     t.index ["node_id"], name: "index_courses_on_node_id", using: :btree
     t.index ["quarter_id"], name: "index_courses_on_quarter_id", using: :btree
