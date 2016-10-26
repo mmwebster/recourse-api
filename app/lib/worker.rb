@@ -137,13 +137,15 @@ module Worker
 
         # recur on children if present
         if node['children']
-          node['children'].each do |child|
+          # the reverse iteration is to prevent iterator skips due to delete
+          # items from an array while iterating through it forward
+          (node['children'].length - 1).step(0, -1) do |childIndex|
             # only recur if the course hasn't been completed
-            if !@completed_course_ids_hash[child['id'].to_i]
-              dfs_clean_and_connect_sub_trees(child)
+            if !@completed_course_ids_hash[node['children'][childIndex]['id'].to_i]
+              dfs_clean_and_connect_sub_trees(node['children'][childIndex])
             else
               # remove course from children if it was completed
-              node['children'].delete(child)
+              node['children'].delete(node['children'][childIndex])
             end
           end
         end
