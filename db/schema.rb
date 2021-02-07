@@ -184,4 +184,3 @@ ActiveRecord::Schema.define(version: 20161026020848) do
   add_foreign_key "quarters", "timelines"
   add_foreign_key "timelines", "users"
   add_foreign_key "users", "schools"
-end
